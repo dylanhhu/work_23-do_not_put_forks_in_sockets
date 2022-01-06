@@ -13,10 +13,11 @@ int main() {
 
   while (1) {
     int to_client = server_connect(sd);
-    printf("[subserver] connected to client! forking\n");
+    printf("[server] connected to client! forking\n");
 
     int pid = fork();
     if (pid == 0) {
+      printf("[subserver] forked, doing the do\n");
       char data[500];
     
       while (1) {
