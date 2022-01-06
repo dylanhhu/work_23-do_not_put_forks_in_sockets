@@ -4,12 +4,13 @@
 static void sighandler(int signo);
 void reverse(char *str);
 
+int sd;
 
 int main() {
   signal(SIGINT, sighandler);
 
   printf("\n[server] setting up for new connections\n");
-  int sd = server_setup();
+  sd = server_setup();
 
   while (1) {
     int to_client = server_connect(sd);
@@ -37,6 +38,7 @@ int main() {
     }
     else if (pid == -1) {
       printf("[server] Couldn't fork (%s, %d)\n", strerror(errno), errno);
+      close(sd);
       exit(EXIT_FAILURE);
     }
     else {
@@ -51,9 +53,9 @@ int main() {
 
 static void sighandler(int signo) {
   if (signo == SIGINT) {
-    printf("[server] SIGINT recieved, exiting!\n");
+    printf("\n[server] SIGINT recieved, exiting!\n");
     
-    remove(WKP);
+    close(sd);
     printf("\n");
     exit(EXIT_SUCCESS);
   }
